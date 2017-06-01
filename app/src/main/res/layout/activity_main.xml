@@ -10,7 +10,7 @@
         android:id="@+id/label2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="lab1_204_08.uwaterloo.ca.lab1_204_08.MainActivityLab1_204_08"
+        tools:context="uwaterloo.ca.MainActivity"
         android:orientation="vertical"
         android:background="#ffffff">
 

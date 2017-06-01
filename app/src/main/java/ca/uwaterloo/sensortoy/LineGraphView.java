@@ -26,10 +26,9 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.View;
 
-import lab1_204_08.uwaterloo.ca.lab1_204_08.MainActivityLab1_204_08;
+import uwaterloo.ca.lab2_204_08.MainActivity;
 
 /**
  * A simple implementation of a line graph widget.
@@ -53,8 +52,8 @@ public class LineGraphView extends View {
     };
     private Paint graphPaint = new Paint();
 
-    private final int WIDTH = MainActivityLab1_204_08.displaywidth;
-    private final int HEIGHT = (MainActivityLab1_204_08.displayheight)/3;
+    private final int WIDTH = MainActivity.displaywidth;
+    private final int HEIGHT = (MainActivity.displayheight)/3;
     private final int AXIS_WIDTH = 100;
 
 
