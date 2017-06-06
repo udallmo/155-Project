@@ -16,6 +16,8 @@ import static uwaterloo.ca.lab2_204_08.MainActivity.zA;
 class AccelerometerSensorEventListener implements SensorEventListener {
     TextView output2;
 
+    private final double FILTER_CONSTANT = 300.0; //subject to change
+
     public AccelerometerSensorEventListener(TextView outputView) {
         output2 = outputView;
     }
@@ -61,9 +63,12 @@ class AccelerometerSensorEventListener implements SensorEventListener {
                         records[i][x] = temp[i + 1][x];
                     }
                 }
-                records[maxLength - 1][0] = se.values[0];
-                records[maxLength - 1][1] = se.values[1];
-                records[maxLength - 1][2] = se.values[2];
+//historical reading = historical reading + (new reading - old historical reading)/Constant
+//the reason we don't need a check is because the smaller the change, the smaller the value after performing the subtraction- so when we divide by C, we get a small number if the change is small
+                records[maxLength - 1][0] += (se.values[0] - records[maxLength-1][0])/FILTER_CONSTANT;
+                records[maxLength - 1][1] += (se.values[1] - records[maxLength-1][1])/FILTER_CONSTANT;
+                records[maxLength - 1][2] += (se.values[2] - records[maxLength-1][2])/FILTER_CONSTANT;
+
             }
         }
     }
