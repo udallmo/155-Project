@@ -16,13 +16,16 @@ import static uwaterloo.ca.lab2_204_08.MainActivity.zA;
 class AccelerometerSensorEventListener implements SensorEventListener {
     TextView output2;
 
-    private final double FILTER_CONSTANT = 300.0; //subject to change
+    private final double FILTER_CONSTANT = 200.0; //subject to change
+    private myFSM xFSM = new myFSM(); //finite state machine for x
+    private myFSM yFSM = new myFSM(); //finite state machine for y
 
     public AccelerometerSensorEventListener(TextView outputView) {
         output2 = outputView;
     }
 
     public void onAccuracyChanged(Sensor s, int i) {
+
     }
 
     public void onSensorChanged(SensorEvent se) {
