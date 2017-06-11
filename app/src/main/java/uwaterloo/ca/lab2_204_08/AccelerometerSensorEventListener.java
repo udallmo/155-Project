@@ -16,7 +16,7 @@ import static uwaterloo.ca.lab2_204_08.MainActivity.zA;
 class AccelerometerSensorEventListener implements SensorEventListener {
     TextView output2;
 
-    private final double FILTER_CONSTANT = 200.0; //subject to change
+    private final float FILTER_CONSTANT = 50.0f;
     private myFSM xFSM = new myFSM(); //finite state machine for x
     private myFSM yFSM = new myFSM(); //finite state machine for y
 
@@ -29,7 +29,6 @@ class AccelerometerSensorEventListener implements SensorEventListener {
     }
 
     public void onSensorChanged(SensorEvent se) {
-        graph.addPoint(se.values);
         if (se.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             if (Math.abs(se.values[0]) > Math.abs(xA)) {
                 xA = Math.abs(se.values[0]);
@@ -59,7 +58,7 @@ class AccelerometerSensorEventListener implements SensorEventListener {
                 records[count][2] = se.values[2];
                 count++;
             } else {
-                double[][] temp = records.clone();
+                float[][] temp = records.clone();
 
                 for (int i = 0; i < maxLength - 1; i++) {
                     for (int x = 0; x < 3; x++) {
@@ -71,7 +70,7 @@ class AccelerometerSensorEventListener implements SensorEventListener {
                 records[maxLength - 1][0] += (se.values[0] - records[maxLength-1][0])/FILTER_CONSTANT;
                 records[maxLength - 1][1] += (se.values[1] - records[maxLength-1][1])/FILTER_CONSTANT;
                 records[maxLength - 1][2] += (se.values[2] - records[maxLength-1][2])/FILTER_CONSTANT;
-
+                graph.addPoint(records[maxLength - 1]);
             }
         }
     }

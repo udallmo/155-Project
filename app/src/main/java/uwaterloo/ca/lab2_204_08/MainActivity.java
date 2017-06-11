@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public static LineGraphView graph;
     public static int count = 0;
     public static int maxLength = 100;
-    public static double[][] records = new double[maxLength][3];
+    public static float[][] records = new float[maxLength][3]; //change doouble to float -- if any problem occur check this
     float light_max;
     public static float xA, yA, zA, xR, yR, zR, xM, yM, zM = 0;
 

@@ -1,5 +1,7 @@
 package uwaterloo.ca.lab2_204_08;
 
+import android.util.Log;
+
 public class myFSM {
     //For the FSM
     enum FSMStates{WAIT, RISE_A, FALL_A, FALL_B, RISE_B, DETERMINED};
@@ -73,7 +75,7 @@ public class myFSM {
 
                 case WAIT:
 
-                    Log.d("WAITING");
+//                    Log.d("WAITING");
 
                     if ((slope >= THRESHOLD_A[0]) && (slope <= THRESHOLD_A[1]))
                     {
@@ -89,7 +91,7 @@ public class myFSM {
 
                 case RISE_A:
 
-                    Log.d("A RISING");
+//                    Log.d("A RISING");
 
                     if (slope < 0){
                         counter = 40;
@@ -115,7 +117,7 @@ public class myFSM {
 
                 case FALL_B:
 
-                    Log.d("B FALLING");
+//                    Log.d("B FALLING");
 
                     if (slope > 0){
                         counter = 40;
