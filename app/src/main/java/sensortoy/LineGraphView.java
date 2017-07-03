@@ -18,17 +18,17 @@
  * 
  */
 
-package ca.uwaterloo.sensortoy;
-
-import java.util.ArrayList;
-import java.util.List;
+package sensortoy;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 
-import uwaterloo.ca.lab2_204_08.MainActivity;
+import java.util.ArrayList;
+import java.util.List;
+
+import uwaterloo.ca.lab3_204_08.MainActivity;
 
 /**
  * A simple implementation of a line graph widget.

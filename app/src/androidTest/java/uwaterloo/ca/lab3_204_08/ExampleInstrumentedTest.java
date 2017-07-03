@@ -1,4 +1,4 @@
-package uwaterloo.ca.lab2_204_08;
+package uwaterloo.ca.lab3_204_08;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("uwaterloo.ca.lab2_204_08", appContext.getPackageName());
+        assertEquals("uwaterloo.ca.lab3_204_08", appContext.getPackageName());
     }
 }
