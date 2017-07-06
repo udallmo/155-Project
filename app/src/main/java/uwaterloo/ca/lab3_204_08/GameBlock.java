@@ -17,9 +17,9 @@ public class GameBlock extends GameBlockTemplate{
     private int myVelocity;
 
 // The declaration of the of the boundaries
-    private int LEFT_BOUNDARY = -65;
+    private int LEFT_BOUNDARY = -60;
     private int RIGHT_BOUNDARY = 750;
-    private int TOP_BOUNDARY = -65;
+    private int TOP_BOUNDARY = -60;
     private int BOT_BOUNDARY = 750;
 
 //Setting the gameblock and define starting location

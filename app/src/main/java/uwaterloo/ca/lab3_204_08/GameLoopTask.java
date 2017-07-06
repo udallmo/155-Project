@@ -12,13 +12,15 @@ import java.util.TimerTask;
 public class GameLoopTask extends TimerTask{
 
     public enum Directions {LEFT, RIGHT, UP, DOWN, NO_MOVEMENT};
+    private int gridBlockSeparation = 203;
 
     private Directions currentDirection = Directions.NO_MOVEMENT;
     GameBlock newBlock;
     private RelativeLayout gameloopRL;
     private Context gameloopCTX;
     private Activity thisActivity;
-    private int randX, randY;
+    private int finalX, finalY;
+    private int[] coordArray = {-60, 210, 480, 750};
     private boolean initialBlock = true; //If we have yet to create the initial block on the game board, this is true.
 
     LinkedList<GameBlock> GBList = new LinkedList();
@@ -28,13 +30,13 @@ public class GameLoopTask extends TimerTask{
 /*Creates the block and set the starting the location
 * Adds the block to the view*/
     private void createBlock(){
-        randX = R.nextInt(815) - 65;
-        randY = R.nextInt(815) - 65;
+        finalX = coordArray[R.nextInt(4)];
+        finalY = coordArray[R.nextInt(4)];
         if (initialBlock) {
-            newBlock = new GameBlock(gameloopCTX, -65, -65);
+            newBlock = new GameBlock(gameloopCTX, -60, -60);
             initialBlock = false;
         } else{
-            newBlock = new GameBlock(gameloopCTX, randX, randY);
+            newBlock = new GameBlock(gameloopCTX, finalX, finalY);
         }
         gameloopRL.addView(newBlock);
         GBList.add(newBlock);
