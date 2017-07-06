@@ -3,7 +3,7 @@ package uwaterloo.ca.lab3_204_08;
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 
-public class GameBlock extends AppCompatImageView {
+public class GameBlock extends GameBlockTemplate{
 
     private GameLoopTask.Directions myDir;
 
@@ -44,6 +44,11 @@ public class GameBlock extends AppCompatImageView {
     public void setBlockDirection(GameLoopTask.Directions thisDir){
         myDir = thisDir;
     }
+
+    public void setDestination(){
+
+    }
+
 /*FSM for movement of the block (LEFT, RIGHT, UP, DOWN)
 * Called from the GameLoopTask.run()
 * Using information from the AccelerometerEventListener
