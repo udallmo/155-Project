@@ -19,24 +19,22 @@ public class GameLoopTask extends TimerTask{
     private RelativeLayout gameloopRL;
     private Context gameloopCTX;
     private Activity thisActivity;
-    private int finalX, finalY;
     private int[] coordArray = {-60, 210, 480, 750};
     private boolean initialBlock = true; //If we have yet to create the initial block on the game board, this is true.
 
     LinkedList<GameBlock> GBList = new LinkedList();
-    Random R = new Random();
+    Random Rand = new Random();
 
 
 /*Creates the block and set the starting the location
 * Adds the block to the view*/
     private void createBlock(){
-        finalX = coordArray[R.nextInt(4)];
-        finalY = coordArray[R.nextInt(4)];
+
         if (initialBlock) {
-            newBlock = new GameBlock(gameloopCTX, -60, -60);
+            newBlock = new GameBlock(gameloopCTX, gameloopRL, -60, -60);
             initialBlock = false;
         } else{
-            newBlock = new GameBlock(gameloopCTX, finalX, finalY);
+            newBlock = new GameBlock(gameloopCTX, gameloopRL, coordArray[Rand.nextInt(4)], coordArray[Rand.nextInt(4)]);
         }
         gameloopRL.addView(newBlock);
         GBList.add(newBlock);

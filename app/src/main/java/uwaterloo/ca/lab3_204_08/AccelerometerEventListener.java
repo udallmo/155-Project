@@ -12,7 +12,6 @@ public class AccelerometerEventListener implements SensorEventListener {
 
     private final float FILTER_CONSTANT = 9.0f;
 
-    private TextView output2;
     private TextView outputGesture;
     private GameLoopTask GameLoop;
 

@@ -2,6 +2,11 @@ package uwaterloo.ca.lab3_204_08;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.graphics.Color;
+
+import java.util.Random;
 
 public class GameBlock extends GameBlockTemplate{
 
@@ -22,10 +27,18 @@ public class GameBlock extends GameBlockTemplate{
     private int TOP_BOUNDARY = -60;
     private int BOT_BOUNDARY = 750;
 
+    private String[] numberArray = {"2","4"};
+    private TextView number;
+    Random Rand = new Random();
+
 //Setting the gameblock and define starting location
-    public GameBlock(Context gbCTX, int coordX, int coordY) {
+    public GameBlock(Context gbCTX, RelativeLayout gameloopRL, int coordX, int coordY) {
 
         super(gbCTX);
+
+        TextView number = new TextView(gbCTX);
+        this.number = number;
+
         this.setImageResource(R.drawable.gameblock);
         this.setX(coordX);
         this.setY(coordY);
@@ -39,6 +52,15 @@ public class GameBlock extends GameBlockTemplate{
         myVelocity=0;
 
         myDir = GameLoopTask.Directions.NO_MOVEMENT;
+
+        number.setTextSize(50.0f);
+        number.setTextColor(Color.BLACK);
+        number.setText(numberArray[Rand.nextInt(2)]);
+        gameloopRL.addView(number);
+        number.setX(coordX + 150);
+        number.setY(coordY + 90);
+
+        //gameloopRL.addView(this);
     }
 //Set the block direction
     public void setBlockDirection(GameLoopTask.Directions thisDir){
@@ -55,6 +77,7 @@ public class GameBlock extends GameBlockTemplate{
 * myVelocity starts at 0 and is either +/- from the acceleration
 * Sets velocity equals to zero when it reaches the bounds*/
     public void move(){
+        number.bringToFront();
 
         switch(myDir){
 
@@ -131,5 +154,7 @@ public class GameBlock extends GameBlockTemplate{
 //Sets the new coordinates of the block
         this.setX(myCoordX);
         this.setY(myCoordY);
+        number.setX(myCoordX + 150);
+        number.setY(myCoordY + 90);
     }
 }
