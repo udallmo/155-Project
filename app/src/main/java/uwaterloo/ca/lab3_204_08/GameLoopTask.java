@@ -42,8 +42,8 @@ public class GameLoopTask extends TimerTask{
 
     private void createBlock() {
         if (numBlocks != 16){ //as long as the board is not filled
-            randX = coordArray[Rand.nextInt(4)];
-            randY = coordArray[Rand.nextInt(4)];
+            randX = coordArray[Rand.nextInt(4)]; //generate a random x b/w 0 and 3 and index it into the array that contains the four possible values of coordinates
+            randY = coordArray[Rand.nextInt(4)]; //generate a random y b/w 0 and 3 and index it into the array that contains the four possible values of coordinates
             while (isOccupied2(GBList, randX, randY)) { //keep generating new numbers if isOccupied2 returns true (IE if there is a block in the chosen spot)
                 randX = coordArray[Rand.nextInt(4)];
                 randY = coordArray[Rand.nextInt(4)];
@@ -72,10 +72,10 @@ public class GameLoopTask extends TimerTask{
     }
 
     public void setDirection(Directions currentDirection){
-            for(GameBlock newBlock : GBList) {
+            for(GameBlock newBlock : GBList) { //for each block in the linked list, call the set direction method
                 newBlock.setBlockDirection(currentDirection);
             }
-            if (currentDirection != Directions.NO_MOVEMENT){ //make sure blocks are only being created on a movement
+            if (currentDirection != Directions.NO_MOVEMENT){ //make sure blocks are only being created after blocks have stopped moving
                 createBlock();
             }
     }
@@ -86,7 +86,7 @@ public class GameLoopTask extends TimerTask{
                 new Runnable(){
                     public void run() {
                         for(GameBlock newBlock : GBList) {
-                            newBlock.move(GBList, newBlock.myCoordX, newBlock.myCoordY);
+                            newBlock.move(GBList);
                     }
                     }
                 }

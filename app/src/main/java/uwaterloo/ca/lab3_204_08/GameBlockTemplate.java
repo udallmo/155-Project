@@ -14,6 +14,6 @@ public abstract class GameBlockTemplate extends AppCompatImageView {
 
     public abstract int setDestination(LinkedList<GameBlock> GBList, int targetCoord, int LRUP, int myCoordX, int myCoordY);
 
-    public abstract void move(LinkedList<GameBlock> GBList, int myInitCoordX, int myInitCoordY);
+    public abstract void move(LinkedList<GameBlock> GBList);
 
 }

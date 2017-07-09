@@ -80,6 +80,8 @@ public class GameBlock extends GameBlockTemplate{
         return coordArray;
     }
 
+    //This method will take in the Game Block list, an x coordinate and a y coordinate,
+    //and check if the supplied x and y coordinates match any of the coordinates of the already exisiting blocks
     public boolean isOccupied(LinkedList<GameBlock> GBList, int x, int y){
         for(GameBlock newBlock : GBList) {
             if ((newBlock.myCoordX == x) && (newBlock.myCoordY == y)){ //if the specified coordinates are already occupied by a block in GBList
@@ -89,13 +91,16 @@ public class GameBlock extends GameBlockTemplate{
         return false; //if it runs through all the created gameblocks and none of them fill the specified coordinates, return false
     }
 
-
+    //This set destination block is what will be our pseudo-collision detection method
+    //It will take in the gameblock list, the target coordinate, which way the block is going to move (LRUP), and the current coordinates of the block in question
+    //It will then run some calculations that takes into account if there is a block at the current target coordinate, if there are blocks between itself and the
+    //target coordinate, and then modify the target coordinate respectively
     public int setDestination(LinkedList<GameBlock> GBList, int targetCoord, int LRUP, int myCoordX, int myCoordY){
-        int blockCount = 0;
-        int slotCount = 0;
+        int blockCount = 0; //this will count how many blocks are between the block in question up to and including the target coordinate
+        int slotCount = 0; //this will count how many slots are between the block in question up to and including the target coordinate
         boolean ready = false;
 
-        while (!ready) { //until we've calculated everything and finalized all target coordinates, keep looping
+        while (!ready) { //until we've calculated everything and finalized the target coordinates, keep looping
             //Log.d("SLOTCOUNT:", " " + slotCount);
             //Log.d("BLOCKCOUNT:", " " + blockCount);
             if (LRUP == 1) //if target destination is LEFT_BOUNDARY
@@ -165,13 +170,13 @@ public class GameBlock extends GameBlockTemplate{
 * Using information from the AccelerometerEventListener
 * myVelocity starts at 0 and is either +/- from the acceleration
 * Sets velocity equals to zero when it reaches the bounds*/
-    public void move(LinkedList<GameBlock> GBList, int myInitCoordX, int myInitCoordY){
+    public void move(LinkedList<GameBlock> GBList){
         number.bringToFront();
         //Log.d("MYCOORDX:", " " + myCoordX);
         switch(myDir){
 
             case LEFT:
-                targetCoordX = setDestination(GBList, LEFT_BOUNDARY, 1, myInitCoordX, myInitCoordY); //LRUP = 1 is for the left boundary
+                targetCoordX = setDestination(GBList, LEFT_BOUNDARY, 1, myCoordX, myCoordY); //LRUP = 1 is for the left boundary
                 //Log.d("TARGETLEFT", "Value = " + targetCoordX);
 
                 if (myCoordX > targetCoordX){
@@ -189,7 +194,7 @@ public class GameBlock extends GameBlockTemplate{
                 break;
 
             case RIGHT:
-                targetCoordX = setDestination(GBList, RIGHT_BOUNDARY, 2, myInitCoordX, myInitCoordY); //LRUP = 2 is for the right boundary
+                targetCoordX = setDestination(GBList, RIGHT_BOUNDARY, 2, myCoordX, myCoordY); //LRUP = 2 is for the right boundary
                 //Log.d("TARGETRIGHT", "Value = " + targetCoordX);
                 if (myCoordX < targetCoordX){
                     myCoordX += myVelocity;
@@ -207,7 +212,7 @@ public class GameBlock extends GameBlockTemplate{
                 break;
 
             case UP:
-                targetCoordY = setDestination(GBList, TOP_BOUNDARY, 3, myInitCoordX, myInitCoordY); //LRUP = 3 is for the top boundary
+                targetCoordY = setDestination(GBList, TOP_BOUNDARY, 3, myCoordX, myCoordY); //LRUP = 3 is for the top boundary
                 //Log.d("TARGETUP", "Value = " + targetCoordY);
                 if (myCoordY > targetCoordY){
                     myCoordY -= myVelocity;
@@ -225,7 +230,7 @@ public class GameBlock extends GameBlockTemplate{
                 break;
 
             case DOWN:
-                targetCoordY = setDestination(GBList, BOT_BOUNDARY, 4, myInitCoordX, myInitCoordY); //LRUP = 4 is for the top boundary
+                targetCoordY = setDestination(GBList, BOT_BOUNDARY, 4, myCoordX, myCoordY); //LRUP = 4 is for the top boundary
                 //Log.d("TARGETDOWN", "Value = " + targetCoordY);
                 if (myCoordY < targetCoordY){
                     myCoordY += myVelocity;
