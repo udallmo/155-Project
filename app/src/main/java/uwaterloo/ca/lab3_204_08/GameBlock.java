@@ -1,14 +1,19 @@
 package uwaterloo.ca.lab3_204_08;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.graphics.Color;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 public class GameBlock extends GameBlockTemplate{
+
+    private GameLoopTask GLT;
 
     private GameLoopTask.Directions myDir;
 
@@ -27,9 +32,12 @@ public class GameBlock extends GameBlockTemplate{
     private int TOP_BOUNDARY = -60;
     private int BOT_BOUNDARY = 750;
 
+    Random Rand = new Random();
     private String[] numberArray = {"2","4"};
     private TextView number;
-    Random Rand = new Random();
+
+    private int LRUP = 0; //LRUP = Left Right Up Down - This will store an integer value corresponding to
+                          // the boundary that the block would move to IF there are no blocks in the way
 
 //Setting the gameblock and define starting location
     public GameBlock(Context gbCTX, RelativeLayout gameloopRL, int coordX, int coordY) {
@@ -67,8 +75,89 @@ public class GameBlock extends GameBlockTemplate{
         myDir = thisDir;
     }
 
-    public void setDestination(){
+    public int[] getCoords(){
+        int[] coordArray = {myCoordX, myCoordY};
+        return coordArray;
+    }
 
+    public boolean isOccupied(LinkedList<GameBlock> GBList, int x, int y){
+        for(GameBlock newBlock : GBList) {
+            if ((newBlock.myCoordX == x) && (newBlock.myCoordY == y)){ //if the specified coordinates are already occupied by a block in GBList
+                return true; //return true
+            }
+        }
+        return false; //if it runs through all the created gameblocks and none of them fill the specified coordinates, return false
+    }
+
+
+    public int setDestination(LinkedList<GameBlock> GBList, int targetCoord, int LRUP, int myCoordX, int myCoordY){
+        int blockCount = 0;
+        int slotCount = 0;
+        boolean ready = false;
+
+        while (!ready) { //until we've calculated everything and finalized all target coordinates, keep looping
+            //Log.d("SLOTCOUNT:", " " + slotCount);
+            //Log.d("BLOCKCOUNT:", " " + blockCount);
+            if (LRUP == 1) //if target destination is LEFT_BOUNDARY
+            {
+                if (targetCoord >= myCoordX){ //if target coordinate is equal to current coordinate, or for some reason if it's larger (by a small calculation bug for example, to prevent against infinite loops)
+                    targetCoord = myCoordX - 270*(slotCount - blockCount);
+                    ready = true;
+                }
+                else if (isOccupied(GBList, targetCoord, myCoordY)){
+                    blockCount++; //if the target coordinate is occupied, increment the block counter (so the block counter is representative of how many blocks are in the way)
+                    slotCount++; //also increment the slot counter (the slot counter increments regardless, it's just to show how many slots there are in front of the block in question
+                    targetCoord += 270; //move the target coordinate one block over if there is a block in the way (this is also done regardless, as we want to check all slots)
+                } else {
+                    slotCount++;
+                    targetCoord += 270;
+                }
+            } else if (LRUP == 2) //if target destination is RIGHT_BOUNDARY
+            {
+                if (targetCoord <= myCoordX){
+                    targetCoord = myCoordX + 270*(slotCount - blockCount);
+                    ready = true;
+                }
+                else if (isOccupied(GBList, targetCoord, myCoordY)){
+                    blockCount++;
+                    slotCount++;
+                    targetCoord -= 270;
+                } else {
+                    slotCount++;
+                    targetCoord -= 270;
+                }
+            } else if (LRUP == 3) //if target destination is TOP_BOUNDARY
+            {
+                if (targetCoord >= myCoordY){
+                    targetCoord = myCoordY - 270*(slotCount - blockCount);
+                    ready = true;
+                }
+                else if (isOccupied(GBList, myCoordX, targetCoord)){
+                    blockCount++;
+                    slotCount++;
+                    targetCoord += 270;
+                } else {
+                    slotCount++;
+                    targetCoord += 270;
+                }
+            } else if (LRUP == 4) //if target destination is BOT_BOUNDARY
+            {
+                if (targetCoord <= myCoordY){
+                    targetCoord = myCoordY + 270*(slotCount - blockCount);
+                    ready = true;
+                }
+                else if (isOccupied(GBList, myCoordX, targetCoord)){
+                    blockCount++;
+                    slotCount++;
+                    targetCoord -= 270;
+                } else {
+                    slotCount++;
+                    targetCoord -= 270;
+                }
+            }
+
+        }
+        return targetCoord;
     }
 
 /*FSM for movement of the block (LEFT, RIGHT, UP, DOWN)
@@ -76,13 +165,14 @@ public class GameBlock extends GameBlockTemplate{
 * Using information from the AccelerometerEventListener
 * myVelocity starts at 0 and is either +/- from the acceleration
 * Sets velocity equals to zero when it reaches the bounds*/
-    public void move(){
+    public void move(LinkedList<GameBlock> GBList, int myInitCoordX, int myInitCoordY){
         number.bringToFront();
-
+        //Log.d("MYCOORDX:", " " + myCoordX);
         switch(myDir){
 
             case LEFT:
-                targetCoordX = LEFT_BOUNDARY;
+                targetCoordX = setDestination(GBList, LEFT_BOUNDARY, 1, myInitCoordX, myInitCoordY); //LRUP = 1 is for the left boundary
+                //Log.d("TARGETLEFT", "Value = " + targetCoordX);
 
                 if (myCoordX > targetCoordX){
                     myCoordX -= myVelocity;
@@ -99,7 +189,8 @@ public class GameBlock extends GameBlockTemplate{
                 break;
 
             case RIGHT:
-                targetCoordX = RIGHT_BOUNDARY;
+                targetCoordX = setDestination(GBList, RIGHT_BOUNDARY, 2, myInitCoordX, myInitCoordY); //LRUP = 2 is for the right boundary
+                //Log.d("TARGETRIGHT", "Value = " + targetCoordX);
                 if (myCoordX < targetCoordX){
                     myCoordX += myVelocity;
 
@@ -116,8 +207,8 @@ public class GameBlock extends GameBlockTemplate{
                 break;
 
             case UP:
-                targetCoordY = TOP_BOUNDARY;
-
+                targetCoordY = setDestination(GBList, TOP_BOUNDARY, 3, myInitCoordX, myInitCoordY); //LRUP = 3 is for the top boundary
+                //Log.d("TARGETUP", "Value = " + targetCoordY);
                 if (myCoordY > targetCoordY){
                     myCoordY -= myVelocity;
 
@@ -134,7 +225,8 @@ public class GameBlock extends GameBlockTemplate{
                 break;
 
             case DOWN:
-                targetCoordY= BOT_BOUNDARY;
+                targetCoordY = setDestination(GBList, BOT_BOUNDARY, 4, myInitCoordX, myInitCoordY); //LRUP = 4 is for the top boundary
+                //Log.d("TARGETDOWN", "Value = " + targetCoordY);
                 if (myCoordY < targetCoordY){
                     myCoordY += myVelocity;
 
@@ -152,7 +244,26 @@ public class GameBlock extends GameBlockTemplate{
                 break;
         }
 //Sets the new coordinates of the block
-        this.setX(myCoordX);
+        if (myCoordX != -60 && myCoordX >= -330 && myCoordX < 75){ //correcting any slight variations in X coordinates
+            myCoordX = -60;
+        } else if (myCoordX != 210 && myCoordX > 75 && myCoordX < 345){
+            myCoordX = 210;
+        } else if (myCoordX != 480 && myCoordX > 345 && myCoordX < 615){
+            myCoordX = 480;
+        } else if (myCoordX != 750 && myCoordX > 615 && myCoordX <= 1010){
+            myCoordX = 750;
+        }
+        if (myCoordY != -60 && myCoordY >= -330 && myCoordY < 75){ //correcting any slight variations in y coordinates
+            myCoordY = -60;
+        } else if (myCoordY != 210 && myCoordY > 75 && myCoordY < 345){
+            myCoordY = 210;
+        } else if (myCoordY != 480 && myCoordY > 345 && myCoordY < 615){
+            myCoordY = 480;
+        } else if (myCoordY != 750 && myCoordY > 615 && myCoordY <= 1010){
+            myCoordY = 750;
+        }
+
+        this.setX(myCoordX); //not an error, just a warning- works as intended like this
         this.setY(myCoordY);
         number.setX(myCoordX + 150);
         number.setY(myCoordY + 90);
